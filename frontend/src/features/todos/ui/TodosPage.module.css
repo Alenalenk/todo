@@ -1,0 +1,62 @@
+.form {
+    display: flex;
+    gap: 10px;
+    margin-block: 10px;
+}
+
+.input {
+    border-radius: 5px;
+    padding: 5px;
+    border: 2px solid rgb(3, 84, 137);
+}
+
+.error {
+    border: 2px solid red;
+}
+
+.todosContainer {
+    border-top: 2px solid rgb(47, 110, 152);
+}
+
+.todoWrap {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding-top: 20px;
+}
+
+.todoDelete {
+    cursor: pointer;
+}
+
+.button {
+    background-color: rgb(33, 164, 251);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    -webkit-box-shadow: 1px 1px 20px 1px #87c7ff;
+    box-shadow: 1px 1px 5px 1px #87c7ff;
+    transition: transform 0.2s ease;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.button:hover {
+    background-color: #138cf5;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transform: scale(1.01);
+}
+
+.button:active {
+    background-color: #57aaf3;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transform: scale(0.98);
+}
