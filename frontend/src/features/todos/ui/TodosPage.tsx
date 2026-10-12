@@ -31,7 +31,7 @@ export const TodosPage = () => {
     }
 
     return (
-        <div>
+        <div className={style.todosPage}>
             <form onSubmit={handleSubmit(onSubmit)} className={style.form}>
                 <input 
                     placeholder='Назва задачі'
@@ -47,11 +47,11 @@ export const TodosPage = () => {
                 <button className={style.button}>Відправити</button>
             </form>
             <div className={style.todosContainer}>
-                {data?.map(todo => (
+                {data?.map((todo: Todo) => (
                 <div key={todo.id} className={style.todoWrap}>
-                    <h2>{todo.title}</h2>
-                    <p>{todo.description}</p>
-                    <p>{todo.status ? "Завершено" : "Не завершено"}</p>
+                    <h2 className={style.todo}>{todo.title}</h2>
+                    <p className={style.todo}>{todo.description}</p>
+                    <p className={style.todo}>{todo.status ? "Завершено" : "Не завершено"}</p>
                     <span
                         className={style.todoDelete}
                         onClick={() => updateTodoHandler(todo)}

@@ -1,43 +1,48 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict, SettingsError, NoDecode
-from pydantic import Field, field_validator, ValidationError
-from typing import Annotated
+from pathlib import Path
+from functools import lru_cache
 
-import sys
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import URL
+
+BASE_DIR = Path(__file__).resolve().parent
+
 
 class Settings(BaseSettings):
-    DEBUG: bool = Field(default=False, alias="DEBUG")
+    ORIGINS: list[str] = Field(default_factory=list)
 
-    ORIGINS: Annotated[list[str], NoDecode]
+    POSTGRES_USER: str = "postgres"
+    POSTGRES_PASSWORD: str = "postgres"
+    POSTGRES_DB: str
+    POSTGRES_SERVER: str = "localhost"
+    POSTGRES_PORT: int = Field(default=5432, ge=1, le=65535)
 
-    POSTGRES_USER: str = Field(default="postgres", alias="POSTGRES_USER")
-    POSTGRES_PASSWORD: str = Field(default="postgres", alias="POSTGRES_PASSWORD")
-    POSTGRES_DB: str = Field(alias="POSTGRES_DB")
-    POSTGRES_SERVER: str = Field(alias="POSTGRES_SERVER")
-    POSTGRES_PORT: int = Field(default=5432, alias="POSTGRES_PORT")
+    model_config = SettingsConfigDict(
+        env_file=BASE_DIR / ".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+        case_sensitive=False,
+    )
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    def build_database_url(self, driver: str) -> str:
+        return URL.create(
+            drivername=driver,
+            username=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_SERVER,
+            port=self.POSTGRES_PORT,
+            database=self.POSTGRES_DB,
+        ).render_as_string(hide_password=False)
 
     @property
-    def DATABASE_URL(self):
-        return "postgresql+asyncpg://{}:{}@{}:{}/{}".format(
-            self.POSTGRES_USER, self.POSTGRES_PASSWORD, self.POSTGRES_SERVER, self.POSTGRES_PORT, self.POSTGRES_DB)
+    def DATABASE_URL(self) -> str:
+        return self.build_database_url("postgresql+asyncpg")
 
-    
     @property
-    def DATABASE_URL_SYNC(self):
-        return "postgresql+psycopg://{}:{}@{}:{}/{}".format(
-            self.POSTGRES_USER, self.POSTGRES_PASSWORD, self.POSTGRES_SERVER, self.POSTGRES_PORT, self.POSTGRES_DB)
-
-    @field_validator("ORIGINS", mode="before")
-    @classmethod
-    def split_origins(cls, v):
-        if isinstance(v, str):
-            return v.split(sep=';')
-        else:
-            raise SettingsError("ORIGINS must be a list")
+    def DATABASE_URL_SYNC(self) -> str:
+        return self.build_database_url("postgresql+psycopg")
 
 
-try:
-    settings = Settings()
-except (ValidationError, SettingsError) as e:
-    sys.exit(1)
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()

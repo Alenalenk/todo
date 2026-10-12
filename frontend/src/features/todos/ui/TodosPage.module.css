@@ -1,3 +1,7 @@
+.todosPage {
+    padding: 30px;
+}
+
 .form {
     display: flex;
     gap: 10px;
@@ -19,16 +23,21 @@
 }
 
 .todoWrap {
-    display: flex;
-    justify-content: space-between;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 10px 10px;
     gap: 20px;
-
     padding-top: 20px;
+}
+
+.todo {
+    overflow-wrap: anywhere;
 }
 
 .todoDelete {
     cursor: pointer;
 }
+
 
 .button {
     background-color: rgb(33, 164, 251);

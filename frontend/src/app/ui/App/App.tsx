@@ -10,10 +10,12 @@ function App() {
 
   return (
     <>
-      <Header/>
+      <Header />
       {isLoading && <div>Завантаження...</div>}
       <div className={style.layout}>
-        <Routing/>
+        <div className="@container">
+          <Routing />
+        </div>
       </div>
     </>
   )
