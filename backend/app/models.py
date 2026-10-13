@@ -12,6 +12,5 @@ class Todo(Base):
     title = Column(String(255), nullable=False)
     description = Column(String(255), nullable=True)
     status = Column(Boolean, nullable=False, default=False)
-
     date_added = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone('Europe/Kyiv')))
     date_modify = Column(DateTime(timezone=True), nullable=True)
