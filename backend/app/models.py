@@ -1,12 +1,7 @@
-print("MODELS START", flush=True)
 from datetime import datetime
-
 from pytz import timezone
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
-print("BEFORE DB IMPORT", flush=True)
 from app.db import Base
-print("AFTER DB IMPORT", flush=True)
-
 
 class Todo(Base):
     __tablename__ = "todos"
@@ -20,5 +15,3 @@ class Todo(Base):
 
     date_added = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone('Europe/Kyiv')))
     date_modify = Column(DateTime(timezone=True), nullable=True)
-
-print("MODELS END", flush=True)
